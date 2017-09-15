@@ -12,7 +12,7 @@ var objistory = (function () {
         BEGINING_OF_TIME = 0,
         END_OF_TIME = -1;
 
-    function historizeIO(objToHistorize, keepOldValue) {
+    function historize(objToHistorize, keepOldValue) {
         var _changesHistory = {},
             _lastChangeId,
             _workingObj = objToHistorize,
@@ -91,7 +91,7 @@ var objistory = (function () {
          * @param oldValue
          * @param newValue
          */
-        function historize(operation, prop, oldValue, newValue) {
+        function historizeOperation(operation, prop, oldValue, newValue) {
             if (_lastChangeId > _workingObj._oioh_version) {
                 for (var i = _lastChangeId; i > _workingObj._oioh_version; i--) {
                     delete _changesHistory[i];
@@ -168,7 +168,7 @@ var objistory = (function () {
             }
 
             if (!getBool(isNotToHistorize)) {
-                historize(SET, prop, obj[propToUse], value);
+                historizeOperation(SET, prop, obj[propToUse], value);
             }
 
             obj[propToUse] = value;
@@ -189,7 +189,7 @@ var objistory = (function () {
             }
 
             if (!getBool(isNotToHistorize)) {
-                historize(SETARRAY, prop, obj[propToUse], value);
+                historizeOperation(SETARRAY, prop, obj[propToUse], value);
             }
 
             obj[propToUse] = [];
@@ -212,7 +212,7 @@ var objistory = (function () {
          */
         function add(parent, obj, propToUse, prop, value, isNotToHistorize) {
             if (!getBool(isNotToHistorize)) {
-                historize(ADD, prop, obj[propToUse], value);
+                historizeOperation(ADD, prop, obj[propToUse], value);
             }
 
             if (obj[propToUse] && Array.isArray(obj[propToUse])) {
@@ -247,7 +247,7 @@ var objistory = (function () {
          */
         function del(parent, obj, propToUse, prop, objToDelete, isNotToHistorize) {
             if (!getBool(isNotToHistorize)) {
-                historize(DELETE, prop, obj[propToUse], objToDelete);
+                historizeOperation(DELETE, prop, obj[propToUse], objToDelete);
             }
 
             if (obj[propToUse]) {
@@ -469,7 +469,7 @@ var objistory = (function () {
     }
 
     return {
-        historizeIO: historizeIO,
+        historize: historize,
         BEGINING_OF_TIME: BEGINING_OF_TIME,
         END_OF_TIME: END_OF_TIME,
         SET: SET,

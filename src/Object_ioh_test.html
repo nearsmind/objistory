@@ -12,12 +12,12 @@
             id: 1,
             data: [
                 {
-                    firstname: 'Kevin',
-                    lastname: 'Leclerc'
+                    firstname: 'John',
+                    lastname: 'Doe'
                 },
                 {
-                    firstname: 'Jorian',
-                    lastname: 'Jooris'
+                    firstname: 'Jan',
+                    lastname: 'Janssens'
                 }
             ]
         };
@@ -26,17 +26,17 @@
             id: 1,
             data: [
                 {
-                    firstname: 'Kevin',
-                    lastname: 'Leclerc'
+                    firstname: 'John',
+                    lastname: 'Doe'
                 },
                 {
-                    firstname: 'Jorian',
-                    lastname: 'Jooris'
+                    firstname: 'Jan',
+                    lastname: 'Janssens'
                 }
             ]
         };
 
-        var histo = objistory.historizeIO(persons, true);
+        var histo = objistory.historize(persons, true);
 
         histo.upd(objistory.ADD, 'ageAverage', 27);
         histo.upd(objistory.ADD, 'data.0.age', 32);
@@ -44,13 +44,13 @@
         histo.upd(objistory.ADD, 'data.0.age1', 33);
         histo.upd(objistory.DELETE, 'data.0.age');
         histo.upd(objistory.SET, 'ageAverage', 28);
-        histo.upd(objistory.SET, 'data.0', {firstname: 'Kevi', lastname: 'Leclerc'});
-        histo.upd(objistory.SET, 'data.0', {firstname: 'Kevi2', lastname: 'Leclerc'});
-        histo.upd(objistory.ADD, 'data', {firstname: 'Kev', lastname: 'Leclerc'});
+        histo.upd(objistory.SET, 'data.0', {firstname: 'Jo', lastname: 'Doe'});
+        histo.upd(objistory.SET, 'data.0', {firstname: 'Jo2', lastname: 'Doe'});
+        histo.upd(objistory.ADD, 'data', {firstname: 'Joh', lastname: 'Doe'});
         histo.upd(objistory.DELETE, 'data', 2);
         histo.upd(objistory.ADD, 'date', new Date());
         histo.upd(objistory.DELETE, 'data');
-        histo.upd(objistory.ADD, 'data', {firstname: 'Kevin', lastname: 'Leclerc'});
+        histo.upd(objistory.ADD, 'data', {firstname: 'John', lastname: 'Doe'});
     </script>
 </head>
 <body>
