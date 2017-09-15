@@ -12,6 +12,130 @@ var objistory = (function () {
         BEGINING_OF_TIME = 0,
         END_OF_TIME = -1;
 
+    var operations = {
+        ADD: ADD,
+        DELETE: DELETE,
+        SET: SET,
+        SETARRAY: SETARRAY
+    };
+
+    function isString(item) {
+        return (typeof item === "string");
+    }
+
+    function isInteger(value) {
+        return typeof value === "number" &&
+            isFinite(value) &&
+            Math.floor(value) === value;
+    }
+
+    function isObject(item) {
+        return (typeof item === "object" && !Array.isArray(item) && item !== null);
+    }
+
+    function isTrueObject(item) {
+        return (Object.prototype.toString.call(item) === '[object Object]');
+    }
+
+    function getBool(val) {
+        if (val === undefined) {
+            return false;
+        }
+
+        var num = +val;
+        return !isNaN(num) ? !!num : !!String(val).toLowerCase().replace(!!0, '');
+    }
+
+    function extendValue(oldValue) {
+        if (isTrueObject(oldValue)) {
+            return extend(true, {}, oldValue);
+        } else if (Array.isArray(oldValue)) {
+            return extend(true, [], oldValue);
+        } else if (isObject(oldValue)) {
+            return extendSimpleValue(oldValue);
+        }
+
+        return oldValue;
+    }
+
+    /**
+     * Clone an object
+     * @param   {Boolean} deep     [[Description]]
+     * @param   {Object} [out={}] [[Description]]
+     * @returns {Object} [[Description]]
+     */
+    function extend(deep, out) {
+        out = out || {};
+
+        for (var i = 2; i < arguments.length; i++) {
+            if (!arguments[i]) {
+                continue;
+            }
+
+            for (var key in arguments[i]) {
+                if (arguments[i].hasOwnProperty(key)) {
+                    if (Object.prototype.toString.call(arguments[i][key]) === '[object Object]') {
+                        if (deep) {
+                            out[key] = extend(deep, out[key], arguments[i][key]);
+                        }
+                    } else if (Array.isArray(arguments[i][key])) {
+                        out[key] = [];
+
+                        extendArray(deep, out[key], arguments[i][key]);
+                    } else {
+                        out[key] = extendSimpleValue(arguments[i][key]);
+                    }
+                }
+            }
+        }
+
+        return out;
+    }
+
+    /**
+     *
+     * @param arg
+     * @returns {*}
+     */
+    function extendSimpleValue(arg) {
+        if (typeof arg === "object") {
+            if (Object.prototype.toString.call(arg) === '[object Date]') {
+                return new Date((arg).getTime());
+            } else if (Object.prototype.toString.call(arg) === '[object String]') {
+                return new String((arg).toString());
+            } else if (Object.prototype.toString.call(arg) === '[object Number]') {
+                return new Number((arg).toString());
+            } else if (Object.prototype.toString.call(arg) === '[object Boolean]') {
+                return new Boolean(getBool(arg));
+            }
+        }
+
+        return arg;
+    }
+
+    /**
+     * Clone an array
+     * @param {Boolean} deep     [[Description]]
+     * @param {Object} out      [[Description]]
+     * @param {Object} objArray [[Description]]
+     */
+    function extendArray(deep, out, objArray) {
+        objArray.forEach(function runIntoArray(obj, pos) {
+
+            if (Object.prototype.toString.call(obj) === '[object Object]') {
+                if (deep) {
+                    out[pos] = extend(deep, out[pos], obj);
+                }
+            } else if (Array.isArray(obj)) {
+                out[pos] = [];
+
+                extendArray(deep, out[pos], obj);
+            } else {
+                out[pos] = obj;
+            }
+        });
+    }
+
     function historize(objToHistorize, keepOldValue) {
         var _changesHistory = {},
             _lastChangeId,
@@ -26,33 +150,6 @@ var objistory = (function () {
 
             _lastChangeId = _workingObj._oioh_version;
         })();
-
-        function isString(item) {
-            return (typeof item === "string");
-        }
-
-        function isInteger(value) {
-            return typeof value === "number" &&
-                isFinite(value) &&
-                Math.floor(value) === value;
-        }
-
-        function isObject(item) {
-            return (typeof item === "object" && !Array.isArray(item) && item !== null);
-        }
-
-        function isTrueObject(item) {
-            return (Object.prototype.toString.call(item) === '[object Object]');
-        }
-
-        function getBool(val) {
-            if (val === undefined) {
-                return false;
-            }
-
-            var num = +val;
-            return !isNaN(num) ? !!num : !!String(val).toLowerCase().replace(!!0, '');
-        }
 
         /**
          * Get the value of the data object
@@ -263,84 +360,6 @@ var objistory = (function () {
             }
         }
 
-        /**
-         * Clone an object
-         * @param   {Boolean} deep     [[Description]]
-         * @param   {Object} [out={}] [[Description]]
-         * @returns {Object} [[Description]]
-         */
-        function extend(deep, out) {
-            out = out || {};
-
-            for (var i = 2; i < arguments.length; i++) {
-                if (!arguments[i]) {
-                    continue;
-                }
-
-                for (var key in arguments[i]) {
-                    if (arguments[i].hasOwnProperty(key)) {
-                        if (Object.prototype.toString.call(arguments[i][key]) === '[object Object]') {
-                            if (deep) {
-                                out[key] = extend(deep, out[key], arguments[i][key]);
-                            }
-                        } else if (Array.isArray(arguments[i][key])) {
-                            out[key] = [];
-
-                            extendArray(deep, out[key], arguments[i][key]);
-                        } else {
-                            out[key] = extendSimpleValue(arguments[i][key]);
-                        }
-                    }
-                }
-            }
-
-            return out;
-        }
-
-        /**
-         *
-         * @param arg
-         * @returns {*}
-         */
-        function extendSimpleValue(arg) {
-            if (typeof arg === "object") {
-                if (Object.prototype.toString.call(arg) === '[object Date]') {
-                    return new Date((arg).getTime());
-                } else if (Object.prototype.toString.call(arg) === '[object String]') {
-                    return new String((arg).toString());
-                } else if (Object.prototype.toString.call(arg) === '[object Number]') {
-                    return new Number((arg).toString());
-                } else if (Object.prototype.toString.call(arg) === '[object Boolean]') {
-                    return new Boolean(getBool(arg));
-                }
-            }
-
-            return arg;
-        }
-
-        /**
-         * Clone an array
-         * @param {Boolean} deep     [[Description]]
-         * @param {Object} out      [[Description]]
-         * @param {Object} objArray [[Description]]
-         */
-        function extendArray(deep, out, objArray) {
-            objArray.forEach(function runIntoArray(obj, pos) {
-
-                if (Object.prototype.toString.call(obj) === '[object Object]') {
-                    if (deep) {
-                        out[pos] = extend(deep, out[pos], obj);
-                    }
-                } else if (Array.isArray(obj)) {
-                    out[pos] = [];
-
-                    extendArray(deep, out[pos], obj);
-                } else {
-                    out[pos] = obj;
-                }
-            });
-        }
-
         function traceHistory() {
             console.log(_changesHistory);
         }
@@ -387,18 +406,6 @@ var objistory = (function () {
             }
 
             objToRestore._oioh_version = to;
-        }
-
-        function extendValue(oldValue) {
-            if (isTrueObject(oldValue)) {
-                return extend(true, {}, oldValue);
-            } else if (Array.isArray(oldValue)) {
-                return extend(true, [], oldValue);
-            } else if (isObject(oldValue)) {
-                return extendSimpleValue(oldValue);
-            }
-
-            return oldValue;
         }
 
         /**
@@ -462,18 +469,15 @@ var objistory = (function () {
             traceHistory: traceHistory,
             applyOn: applyOn,
             restoreAt: restoreAt,
-            changeObjectToHistorize: changeObjectToHistorize,
-            extendValue: extendValue
+            changeObjectToHistorize: changeObjectToHistorize
         };
     }
 
     return {
         historize: historize,
+        operations: operations,
+        extendValue: extendValue,
         BEGINING_OF_TIME: BEGINING_OF_TIME,
-        END_OF_TIME: END_OF_TIME,
-        SET: SET,
-        SETARRAY: SETARRAY,
-        ADD: ADD,
-        DELETE: DELETE
+        END_OF_TIME: END_OF_TIME
     }
 }());
