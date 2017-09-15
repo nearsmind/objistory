@@ -102,14 +102,10 @@ var objistory = (function () {
             _lastChangeId = _workingObj._oioh_version;
 
             if (_keepOldValue) {
-                if (isObject(oldValue) || Array.isArray(oldValue)) {
-                    oldValue = extend(true, {}, oldValue);
-                }
+                oldValue = extendValue(oldValue);
             }
 
-            if (isObject(newValue) || Array.isArray(newValue)) {
-                newValue = extend(true, {}, {value: newValue}).value;
-            }
+            newValue = extendValue(newValue);
 
             _changesHistory[_workingObj._oioh_version] = {
                 operation: operation,
@@ -124,7 +120,7 @@ var objistory = (function () {
                 return;
             }
 
-            value = extendOldValue(value);
+            value = extendValue(value);
 
             var lastObj = objToUse || _workingObj,
                 parent,
@@ -393,9 +389,11 @@ var objistory = (function () {
             objToRestore._oioh_version = to;
         }
 
-        function extendOldValue(oldValue) {
-            if (isTrueObject(oldValue) || Array.isArray(oldValue)) {
+        function extendValue(oldValue) {
+            if (isTrueObject(oldValue)) {
                 return extend(true, {}, oldValue);
+            } else if (Array.isArray(oldValue)) {
+                return extend(true, [], oldValue);
             } else if (isObject(oldValue)) {
                 return extendSimpleValue(oldValue);
             }
@@ -464,7 +462,8 @@ var objistory = (function () {
             traceHistory: traceHistory,
             applyOn: applyOn,
             restoreAt: restoreAt,
-            changeObjectToHistorize: changeObjectToHistorize
+            changeObjectToHistorize: changeObjectToHistorize,
+            extendValue: extendValue
         };
     }
 
