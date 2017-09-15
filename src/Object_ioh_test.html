@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="js/objistory.js"></script>
+
+    <script>
+
+        var persons = {
+            id: 1,
+            data: [
+                {
+                    firstname: 'Kevin',
+                    lastname: 'Leclerc'
+                },
+                {
+                    firstname: 'Jorian',
+                    lastname: 'Jooris'
+                }
+            ]
+        };
+
+        var p2 = {
+            id: 1,
+            data: [
+                {
+                    firstname: 'Kevin',
+                    lastname: 'Leclerc'
+                },
+                {
+                    firstname: 'Jorian',
+                    lastname: 'Jooris'
+                }
+            ]
+        };
+
+        var histo = objistory.historizeIO(persons, true);
+
+        histo.upd(objistory.ADD, 'ageAverage', 27);
+        histo.upd(objistory.ADD, 'data.0.age', 32);
+        histo.upd(objistory.ADD, 'data.1.age', 23);
+        histo.upd(objistory.ADD, 'data.0.age1', 33);
+        histo.upd(objistory.DELETE, 'data.0.age');
+        histo.upd(objistory.SET, 'ageAverage', 28);
+        histo.upd(objistory.SET, 'data.0', {firstname: 'Kevi', lastname: 'Leclerc'});
+        histo.upd(objistory.SET, 'data.0', {firstname: 'Kevi2', lastname: 'Leclerc'});
+        histo.upd(objistory.ADD, 'data', {firstname: 'Kev', lastname: 'Leclerc'});
+        histo.upd(objistory.DELETE, 'data', 2);
+        histo.upd(objistory.ADD, 'date', new Date());
+        histo.upd(objistory.DELETE, 'data');
+        histo.upd(objistory.ADD, 'data', {firstname: 'Kevin', lastname: 'Leclerc'});
+    </script>
+</head>
+<body>
+
+
+</body>
+</html>
