@@ -212,6 +212,22 @@ var objistory = (function () {
             };
         }
 
+        function add(prop, value, isNotToHistorize, objToUse) {
+            upd(ADD, prop, value, isNotToHistorize, objToUse);
+        }
+
+        function set(prop, value, isNotToHistorize, objToUse) {
+            upd(SET, prop, value, isNotToHistorize, objToUse);
+        }
+
+        function setarray(prop, value, isNotToHistorize, objToUse) {
+            upd(SETARRAY, prop, value, isNotToHistorize, objToUse);
+        }
+
+        function del(prop, value, isNotToHistorize, objToUse) {
+            upd(DELETE, prop, value, isNotToHistorize, objToUse);
+        }
+        
         function upd(operation, prop, value, isNotToHistorize, objToUse) {
             if (!prop || !isString(prop) || !prop.trim().length > 0) {
                 return;
@@ -239,10 +255,10 @@ var objistory = (function () {
             }
 
             switch (operation) {
-                case SET : set(parent, lastObj, propToUse, prop, value, isNotToHistorize); break;
-                case SETARRAY : setArray(parent, lastObj, propToUse, prop, value, isNotToHistorize); break;
-                case ADD : add(parent, lastObj, propToUse, prop, value, isNotToHistorize); break;
-                case DELETE : del(parent, lastObj, propToUse, prop, value, isNotToHistorize); break;
+                case SET : setValue(parent, lastObj, propToUse, prop, value, isNotToHistorize); break;
+                case SETARRAY : setArrayValues(parent, lastObj, propToUse, prop, value, isNotToHistorize); break;
+                case ADD : addValue(parent, lastObj, propToUse, prop, value, isNotToHistorize); break;
+                case DELETE : deleteValue(parent, lastObj, propToUse, prop, value, isNotToHistorize); break;
             }
         }
 
@@ -255,7 +271,7 @@ var objistory = (function () {
          * @param value
          * @param isNotToHistorize
          */
-        function set(parent, obj, propToUse, prop, value, isNotToHistorize) {
+        function setValue(parent, obj, propToUse, prop, value, isNotToHistorize) {
             if (isInteger(Number(propToUse)) && Array.isArray(parent)) {
                 obj = parent;
             }
@@ -276,7 +292,7 @@ var objistory = (function () {
          * @param value
          * @param isNotToHistorize
          */
-        function setArray(parent, obj, propToUse, prop, value, isNotToHistorize) {
+        function setArrayValues(parent, obj, propToUse, prop, value, isNotToHistorize) {
             if (isInteger(Number(propToUse)) && Array.isArray(parent)) {
                 obj = parent;
             }
@@ -303,7 +319,7 @@ var objistory = (function () {
          * @param value
          * @param isNotToHistorize
          */
-        function add(parent, obj, propToUse, prop, value, isNotToHistorize) {
+        function addValue(parent, obj, propToUse, prop, value, isNotToHistorize) {
             if (!getBool(isNotToHistorize)) {
                 historizeOperation(ADD, prop, obj[propToUse], value);
             }
@@ -338,7 +354,7 @@ var objistory = (function () {
          * @param objToDelete
          * @param isNotToHistorize
          */
-        function del(parent, obj, propToUse, prop, objToDelete, isNotToHistorize) {
+        function deleteValue(parent, obj, propToUse, prop, objToDelete, isNotToHistorize) {
             if (!getBool(isNotToHistorize)) {
                 historizeOperation(DELETE, prop, obj[propToUse], objToDelete);
             }
@@ -465,6 +481,10 @@ var objistory = (function () {
 
         return {
             get: get,
+            set: set,
+            setarray: setarray,
+            add: add,
+            del: del,
             upd: upd,
             traceHistory: traceHistory,
             applyOn: applyOn,
