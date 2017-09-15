@@ -4,8 +4,6 @@
     <list default="true" id="76f8c2b8-802b-4204-ad84-f4a27f152b9f" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Object_ioh_test.html" afterPath="$PROJECT_DIR$/src/Object_ioh_test.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/js/objistory.js" afterPath="$PROJECT_DIR$/src/js/objistory.js" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -26,12 +24,12 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="FIRST">
-              <first_editor relative-caret-position="476">
-                <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="391">
+                <caret line="82" column="10" lean-forward="true" selection-start-line="82" selection-start-column="10" selection-end-line="82" selection-end-column="10" />
                 <folding />
               </first_editor>
               <second_editor />
@@ -39,7 +37,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="objistory.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="objistory.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/js/objistory.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="221">
@@ -68,8 +66,8 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/src/Object_ioh_test.html" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/src/js/objistory.js" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
@@ -241,7 +239,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1505458380779</updated>
-      <workItem from="1505458382017" duration="4751000" />
+      <workItem from="1505458382017" duration="5784000" />
     </task>
     <task id="LOCAL-00001" summary="Change names and example">
       <created>1505464159549</created>
@@ -271,11 +269,18 @@
       <option name="project" value="LOCAL" />
       <updated>1505466620669</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="add function to facilitate object modification">
+      <created>1505476933414</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1505476933414</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4751000" />
+    <option name="totallyTimeSpent" value="5784000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -312,24 +317,14 @@
     <MESSAGE value="Change names and example" />
     <MESSAGE value="bug fix.&#10;&#10;the extend of array doesn't work correctly.&#10;Now that's work. &#10;&#10;I've added a function to make the extend by yourself on the object historize.&#10;(maybe change this in the future)." />
     <MESSAGE value="finally I've reorganized the code." />
-    <option name="LAST_COMMIT_MESSAGE" value="finally I've reorganized the code." />
+    <MESSAGE value="add function to facilitate object modification" />
+    <option name="LAST_COMMIT_MESSAGE" value="add function to facilitate object modification" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="FIRST">
-          <first_editor relative-caret-position="476">
-            <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
-            <folding />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Object_ioh_test.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="323">
@@ -343,6 +338,17 @@
         <state relative-caret-position="221">
           <caret line="211" column="14" lean-forward="true" selection-start-line="211" selection-start-column="14" selection-end-line="211" selection-end-column="14" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="391">
+            <caret line="82" column="10" lean-forward="true" selection-start-line="82" selection-start-column="10" selection-end-line="82" selection-end-column="10" />
+            <folding />
+          </first_editor>
+          <second_editor />
         </state>
       </provider>
     </entry>
