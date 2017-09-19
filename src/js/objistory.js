@@ -24,9 +24,7 @@ var objistory = (function () {
     }
 
     function isInteger(value) {
-        return typeof value === "number" &&
-            isFinite(value) &&
-            Math.floor(value) === value;
+        return typeof value === "number" && isFinite(value) && Math.floor(value) === value;
     }
 
     function isObject(item) {
@@ -46,16 +44,16 @@ var objistory = (function () {
         return !isNaN(num) ? !!num : !!String(val).toLowerCase().replace(!!0, '');
     }
 
-    function extendValue(oldValue) {
-        if (isTrueObject(oldValue)) {
-            return extend(true, {}, oldValue);
-        } else if (Array.isArray(oldValue)) {
-            return extend(true, [], oldValue);
-        } else if (isObject(oldValue)) {
-            return extendSimpleValue(oldValue);
+    function extendValue(value) {
+        if (isTrueObject(value)) {
+            return extend(true, {}, value);
+        } else if (Array.isArray(value)) {
+            return extend(true, [], value);
+        } else if (isObject(value)) {
+            return extendSimpleValue(value);
         }
 
-        return oldValue;
+        return value;
     }
 
     /**
@@ -99,14 +97,12 @@ var objistory = (function () {
      */
     function extendSimpleValue(arg) {
         if (typeof arg === "object") {
-            if (Object.prototype.toString.call(arg) === '[object Date]') {
-                return new Date((arg).getTime());
-            } else if (Object.prototype.toString.call(arg) === '[object String]') {
-                return new String((arg).toString());
-            } else if (Object.prototype.toString.call(arg) === '[object Number]') {
-                return new Number((arg).toString());
-            } else if (Object.prototype.toString.call(arg) === '[object Boolean]') {
-                return new Boolean(getBool(arg));
+            switch (Object.prototype.toString.call(arg)) {
+                case '[object Date]' : return new Date(arg.valueOf());
+                case '[object String]' : return new String(arg.valueOf());
+                case '[object Number]' : return new Number(arg.valueOf());
+                case '[object Boolean]' : return new Boolean(arg.valueOf());
+                case '[object RegExp]' : return new RegExp(arg.valueOf());
             }
         }
 
@@ -174,11 +170,7 @@ var objistory = (function () {
                 lastObj = _workingObj[props[0]];
             }
 
-            if (!lastObj && defaultValue) {
-                return defaultValue;
-            }
-
-            return lastObj;
+            return (!lastObj && defaultValue ? defaultValue : lastObj);
         }
 
         /**
@@ -195,20 +187,13 @@ var objistory = (function () {
                 }
             }
 
-            _workingObj._oioh_version++;
-            _lastChangeId = _workingObj._oioh_version;
-
-            if (_keepOldValue) {
-                oldValue = extendValue(oldValue);
-            }
-
-            newValue = extendValue(newValue);
+            _lastChangeId = ++_workingObj._oioh_version;
 
             _changesHistory[_workingObj._oioh_version] = {
                 operation: operation,
                 prop: prop,
-                oldValue: oldValue,
-                newValue: newValue
+                oldValue: (_keepOldValue ? extendValue(oldValue) : undefined),
+                newValue: extendValue(newValue)
             };
         }
 
@@ -227,7 +212,7 @@ var objistory = (function () {
         function del(prop, value, isNotToHistorize, objToUse) {
             upd(DELETE, prop, value, isNotToHistorize, objToUse);
         }
-        
+
         function upd(operation, prop, value, isNotToHistorize, objToUse) {
             if (!prop || !isString(prop) || !prop.trim().length > 0) {
                 return;
@@ -238,7 +223,7 @@ var objistory = (function () {
             var lastObj = objToUse || _workingObj,
                 parent,
                 props = prop.split('.'),
-                key = 0, propToUse;
+                propToUse;
 
             if (props && props.length > 1) {
                 //run into the object to got the value of prop
@@ -361,13 +346,7 @@ var objistory = (function () {
 
             if (obj[propToUse]) {
                 if (Array.isArray(obj[propToUse]) && objToDelete) {
-                    var idx = -1;
-
-                    if (isObject(objToDelete)) {
-                        idx = obj[propToUse].indexOf(objToDelete);
-                    } else {
-                        idx = objToDelete;
-                    }
+                    var idx = (isObject(objToDelete) ? obj[propToUse].indexOf(objToDelete) : objToDelete);
 
                     obj[propToUse].splice(idx, 1);
                 } else {
@@ -389,34 +368,23 @@ var objistory = (function () {
             var i, to, history, objToRestore;
 
             objToRestore = (inputObject ? inputObject : _workingObj);
-
-            if (restorePoint && isInteger(restorePoint)) {
-                to = restorePoint;
-            } else {
-                to = BEGINING_OF_TIME;
-            }
+            to = (restorePoint && isInteger(restorePoint) ? restorePoint : BEGINING_OF_TIME);
 
             for (i = objToRestore._oioh_version; i > to; i--) {
                 history = _changesHistory[i];
 
                 if (history) {
                     switch (history.operation) {
-                        case SET :
-                            upd(SET, history.prop, history.oldValue, true, objToRestore);
-                            break;
-                        case SETARRAY :
-                            upd(SETARRAY, history.prop, history.oldValue, true, objToRestore);
-                            break;
+                        case SET : set(history.prop, history.oldValue, true, objToRestore); break;
+                        case SETARRAY : setarray(history.prop, history.oldValue, true, objToRestore); break;
                         case ADD :
                             if (isObject(history.oldValue) || Array.isArray(history.oldValue)) {
-                                upd(SET, history.prop, history.oldValue, true, objToRestore)
+                                set(history.prop, history.oldValue, true, objToRestore)
                             } else {
-                                upd(DELETE, history.prop, history.newValue, true, objToRestore);
+                                del(history.prop, history.newValue, true, objToRestore);
                             }
                             break;
-                        case DELETE :
-                            upd(ADD, history.prop, history.oldValue, true, objToRestore);
-                            break;
+                        case DELETE : add(history.prop, history.oldValue, true, objToRestore); break;
                     }
                 }
             }
@@ -456,18 +424,10 @@ var objistory = (function () {
 
                 if (history) {
                     switch (history.operation) {
-                        case SET :
-                            upd(SET, history.prop, history.newValue, true, objToApply);
-                            break;
-                        case SETARRAY :
-                            upd(SETARRAY, history.prop, history.newValue, true, objToApply);
-                            break;
-                        case ADD :
-                            upd(ADD, history.prop, history.newValue, true, objToApply);
-                            break;
-                        case DELETE :
-                            upd(DELETE, history.prop, history.newValue, true, objToApply);
-                            break;
+                        case SET : set(history.prop, history.newValue, true, objToApply); break;
+                        case SETARRAY : setarray(history.prop, history.newValue, true, objToApply); break;
+                        case ADD : add(history.prop, history.newValue, true, objToApply); break;
+                        case DELETE : del(history.prop, history.newValue, true, objToApply); break;
                     }
                 }
             }
