@@ -147,6 +147,41 @@ var objistory = (function () {
             _lastChangeId = _workingObj._oioh_version;
         })();
 
+        function getPropertyValueHistory(prop) {
+            var values = [],
+                change,
+                lastChange,
+                i;
+
+            for (i = 1; i < _lastChangeId; i++) {
+                change = _changesHistory[i];
+
+                if (change.prop === prop) {
+                    lastChange = change;
+                    values.push(
+                        {
+                            value: change.oldValue,
+                            moment: change.moment
+                        });
+                }
+            }
+
+            if (lastChange && lastChange.operation !== DELETE) {
+                values.push(
+                    {
+                        value: change.newValue,
+                        moment: change.moment
+                    }
+                );
+            }
+
+            if (values.length > 0 && !values[0].value) {
+                 values.splice(0, 1);
+            }
+
+            return extendValue(values);
+        }
+
         /**
          * Get the value of the data object
          * @param prop
@@ -193,7 +228,8 @@ var objistory = (function () {
                 operation: operation,
                 prop: prop,
                 oldValue: (_keepOldValue ? extendValue(oldValue) : undefined),
-                newValue: extendValue(newValue)
+                newValue: extendValue(newValue),
+                moment: (new Date().valueOf())
             };
         }
 
@@ -355,8 +391,24 @@ var objistory = (function () {
             }
         }
 
-        function traceHistory() {
-            console.log(_changesHistory);
+        function traceHistory(prop) {
+            if (prop === null || prop === undefined || prop === '') {
+                return extendValue(_changesHistory);
+            }
+
+            var values = [],
+                change,
+                i;
+
+            for (i = 1; i < _lastChangeId; i++) {
+                change = _changesHistory[i];
+
+                if (change.prop === prop) {
+                    values.push(change);
+                }
+            }
+
+            return extendValue(values);
         }
 
         /**
@@ -449,7 +501,8 @@ var objistory = (function () {
             traceHistory: traceHistory,
             applyOn: applyOn,
             restoreAt: restoreAt,
-            changeObjectToHistorize: changeObjectToHistorize
+            changeObjectToHistorize: changeObjectToHistorize,
+            getPropertyValueHistory: getPropertyValueHistory
         };
     }
 
